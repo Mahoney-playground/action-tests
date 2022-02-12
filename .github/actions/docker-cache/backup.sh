@@ -7,7 +7,7 @@ set -exuo pipefail
 main() {
   local cache_dir=$1
 
-  whoami
+  id
 
   rm -rf "$cache_dir"
   mkdir -p "$(dirname "$cache_dir")"
