@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -exuo pipefail
+set -euo pipefail
 # shellcheck source=timing.sh
 . "${BASH_SOURCE%/*}/timing.sh"
 
@@ -17,17 +17,6 @@ main() {
   fi
 
   timing sudo service docker start
-}
-
-fast_delete() {
-  local to_delete=$1
-
-  if [ -d "$to_delete" ]; then
-    # mv is c. 25 seconds faster than rm -rf here
-    local temp_dir; temp_dir="$(mktemp -d --dry-run)"
-    timing sudo mv "$to_delete" "$temp_dir"
-    nohup rm -rf "$temp_dir" </dev/null >/dev/null 2>&1 & disown
-  fi
 }
 
 main "$@"
