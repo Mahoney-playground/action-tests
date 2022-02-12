@@ -18,11 +18,11 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ runner.temp }}/docker_cache
-          key: mycache2-${{ github.ref }}-${{ github.sha }}
+          key: mycache3-${{ github.ref }}-${{ github.sha }}
           restore-keys: |
             **-${{ github.sha }}
-            mycache2-${{ github.ref }}-
-            mycache2-
+            mycache3-${{ github.ref }}-
+            mycache3-
 
       # Caching the entire docker dir is quite extreme. May stop being necessary with https://github.com/moby/buildkit/issues/1512
       - name: Restore docker from cache
