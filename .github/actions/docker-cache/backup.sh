@@ -12,6 +12,7 @@ main() {
 
   timing sudo service docker stop
   timing sudo mv /var/lib/docker "$cache_dir"
+  timing sudo chown -R "$USER:$(id -g -n "$USER")" "$cache_dir"
   sudo ls -lh "$cache_dir"
   sudo du -sh "$cache_dir"
 }

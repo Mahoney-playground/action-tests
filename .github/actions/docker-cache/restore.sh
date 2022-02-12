@@ -13,6 +13,7 @@ main() {
 
   if [[ -d "$cache_dir" ]]; then
     timing sudo mv "$cache_dir" /var/lib/docker
+    timing sudo chown -R root:root /var/lib/docker
   fi
 
   timing sudo service docker start
