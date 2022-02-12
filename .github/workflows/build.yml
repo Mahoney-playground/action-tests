@@ -18,14 +18,11 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ runner.temp }}/docker_cache
-          # Always want a cache miss on the first build of the day, which should be the scheduled
-          # overnight one. Proves the build works from scratch, and gives you a nice clean cache to
-          # work with each day.
-          key: ${{ env.cache-name }}_${{ steps.date.outputs.date }}-${{ github.ref }}-${{ github.sha }}
+          key: mycache-${{ github.ref }}-${{ github.sha }}
           restore-keys: |
-            '**-${{ github.sha }}'
-            ${{ env.cache-name }}_${{ steps.date.outputs.date }}-${{ github.ref }}-
-            ${{ env.cache-name }}_${{ steps.date.outputs.date }}-
+            **-${{ github.sha }}
+            mycache-${{ github.ref }}-
+            mycache-
 
       # Caching the entire docker dir is quite extreme. May stop being necessary with https://github.com/moby/buildkit/issues/1512
       - name: Restore docker from cache
@@ -45,4 +42,4 @@ jobs:
           docker rm altered
 
       - name: Prepare cached docker directory
-        run: .github/actions/docker-cache/backup.sh ${{ runner.temp }}/docker_cache/cache.tar
+        run: .github/actions/docker-cache/backup.sh ${{ runner.temp }}/docker_cache
