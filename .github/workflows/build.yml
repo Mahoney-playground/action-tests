@@ -28,7 +28,7 @@ jobs:
       - name: Restore docker from cache
         run: .github/actions/docker-cache/restore.sh ${{ runner.temp }}/docker_cache/cache.tar
 
-      - name: update cache
+      - name: Do some work with the cache
         run: |
           if ! docker image inspect cached >/dev/null 2>&1; then docker pull alpine && docker tag alpine cached; fi
           docker run --name altered cached sh -c 'touch cached.txt && \
