@@ -12,22 +12,37 @@ jobs:
     runs-on: ubuntu-20.04
 
     steps:
+      - uses: actions/checkout@v2
 
-      - name: Use cache
+      - name: Use cached docker directory
         uses: actions/cache@v2
         with:
-          path: cached.txt
-          key: mycache-${{ github.ref }}-${{ github.sha }}
+          path: ${{ runner.temp }}/docker_cache
+          # Always want a cache miss on the first build of the day, which should be the scheduled
+          # overnight one. Proves the build works from scratch, and gives you a nice clean cache to
+          # work with each day.
+          key: ${{ env.cache-name }}_${{ steps.date.outputs.date }}-${{ github.ref }}-${{ github.sha }}
           restore-keys: |
-            **-${{ github.sha }}
-            mycache-${{ github.ref }}-
-            mycache-
+            '**-${{ github.sha }}'
+            ${{ env.cache-name }}_${{ steps.date.outputs.date }}-${{ github.ref }}-
+            ${{ env.cache-name }}_${{ steps.date.outputs.date }}-
+
+      # Caching the entire docker dir is quite extreme. May stop being necessary with https://github.com/moby/buildkit/issues/1512
+      - name: Restore docker from cache
+        run: .github/actions/docker-cache/restore.sh ${{ runner.temp }}/docker_cache/cache.tar
 
       - name: update cache
         run: |
-          touch cached.txt
-          echo "Initial state of cached.txt:"
-          cat cached.txt
-          echo ${{ github.ref }}-${{ github.sha }}-${{ github.run_number }} >> cached.txt
-          echo "Updated state of cached.txt:"
-          cat cached.txt
+          if ! docker image inspect cached >/dev/null 2>&1; then docker pull alpine && docker tag alpine cached; fi
+          docker run --name altered cached sh -c 'touch cached.txt && \
+            echo "Initial state of cached.txt:" && \
+            cat cached.txt && \
+            echo ${{ github.ref }}-${{ github.sha }}-${{ github.run_number }} >> cached.txt && \
+            echo "Updated state of cached.txt:" && \
+            cat cached.txt'
+  
+          docker commit altered cached
+          docker rm altered
+
+      - name: Prepare cached docker directory
+        run: .github/actions/docker-cache/backup.sh ${{ runner.temp }}/docker_cache/cache.tar
