@@ -5,20 +5,17 @@ set -euo pipefail
 . "${BASH_SOURCE%/*}/timing.sh"
 
 main() {
-  local cache_dir=$1
+  local cache_tar=$1
+  local cache_dir
+  cache_dir=$(dirname "$cache_tar")
+
+  mkdir -p "$cache_dir"
+  rm -f "$cache_tar"
 
   timing sudo service docker stop
-
-  fast_delete "$cache_dir"
-
-  sudo mv -T /var/lib/docker "$cache_dir"
-  sudo chown -R "$USER:$(id -g -n "$USER")" "$cache_dir"
-  sudo chmod -R u+r "$cache_dir"
-
-  ls -lh "$cache_dir"
-  set +e
-  du -sh "$cache_dir"
-  set -e
+  timing sudo /bin/tar -c -f "$cache_tar" -C /var/lib/docker .
+  sudo chown "$USER:$(id -g -n "$USER")" "$cache_tar"
+  ls -lh "$cache_tar"
 }
 
 main "$@"

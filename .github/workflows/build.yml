@@ -26,7 +26,7 @@ jobs:
 
       # Caching the entire docker dir is quite extreme. May stop being necessary with https://github.com/moby/buildkit/issues/1512
       - name: Restore docker from cache
-        run: .github/actions/docker-cache/restore.sh ${{ runner.temp }}/docker_cache
+        run: .github/actions/docker-cache/restore.sh ${{ runner.temp }}/docker_cache/cache.tar
 
       - name: Do some work with the cache
         run: |
@@ -42,4 +42,4 @@ jobs:
           docker rm altered
 
       - name: Prepare cached docker directory
-        run: .github/actions/docker-cache/backup.sh ${{ runner.temp }}/docker_cache
+        run: .github/actions/docker-cache/backup.sh ${{ runner.temp }}/docker_cache/cache.tar
