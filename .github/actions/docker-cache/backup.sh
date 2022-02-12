@@ -13,7 +13,7 @@ main() {
   fast_delete "$cache_dir"
   sudo mv -T /var/lib/docker "$cache_dir"
   sudo chown -R "$USER:$(id -g -n "$USER")" "$cache_dir"
-  chmod -R u+r "$cache_dir"
+  sudo chmod -R u+r "$cache_dir"
   ls -lh "$cache_dir"
   du -sh "$cache_dir"
 }
