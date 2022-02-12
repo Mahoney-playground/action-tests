@@ -15,7 +15,9 @@ main() {
   sudo chown -R "$USER:$(id -g -n "$USER")" "$cache_dir"
   sudo chmod -R u+r "$cache_dir"
   ls -lh "$cache_dir"
+  set +e
   du -sh "$cache_dir"
+  set -e
 }
 
 fast_delete() {
