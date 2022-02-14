@@ -7,6 +7,8 @@ set -euo pipefail
 main() {
   local cache_tar=$1
 
+  docker volume ls
+
   timing sudo service docker stop
 
   fast_delete /var/lib/docker
@@ -18,6 +20,8 @@ main() {
   fi
 
   timing sudo service docker start
+
+  docker volume ls
 }
 
 main "$@"

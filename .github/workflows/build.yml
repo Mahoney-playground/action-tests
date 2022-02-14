@@ -7,6 +7,13 @@ on:
     tags:
       - '*'
 
+env:
+  COMPOSE_DOCKER_CLI_BUILD: 1
+  DOCKER_BUILDKIT: 1
+  BUILDKIT_PROGRESS: plain
+  PROGRESS_NO_TRUNC: 1
+  cache-name: docker-cache-3
+
 jobs:
   build:
     runs-on: ubuntu-20.04
@@ -14,32 +21,34 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Get current date
+        id: date
+        run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
+
       - name: Use cached docker directory
         uses: actions/cache@v2
         with:
           path: ${{ runner.temp }}/docker_cache
-          key: mycache3-${{ github.ref }}-${{ github.sha }}
+          # Always want a cache miss on the first build of the day, which should be the scheduled
+          # overnight one. Proves the build works from scratch, and gives you a nice clean cache to
+          # work with each day.
+          key: ${{ env.cache-name }}_${{ steps.date.outputs.date }}-${{ github.sha }}
           restore-keys: |
-            **-${{ github.sha }}
-            mycache3-${{ github.ref }}-
-            mycache3-
+            ${{ env.cache-name }}_${{ steps.date.outputs.date }}-
 
-      # Caching the entire docker dir is quite extreme. May stop being necessary with https://github.com/moby/buildkit/issues/1512
       - name: Restore docker from cache
         run: .github/actions/docker-cache/restore.sh ${{ runner.temp }}/docker_cache/cache.tar
 
-      - name: Do some work with the cache
-        run: |
-          if ! docker image inspect cached >/dev/null 2>&1; then docker pull alpine && docker tag alpine cached; fi
-          docker run --name altered cached sh -c 'touch cached.txt && \
-            echo "Initial state of cached.txt:" && \
-            cat cached.txt && \
-            echo ${{ github.ref }}-${{ github.sha }}-${{ github.run_number }} >> cached.txt && \
-            echo "Updated state of cached.txt:" && \
-            cat cached.txt'
-  
-          docker commit altered cached
-          docker rm altered
+      # Allow us to build multi-arch images
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@master
+
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@master
+
+      - name: Build
+        run: ./.github/ci-build.sh ghcr.io/wiremock/wiremock-studio:${{ github.sha }}
 
       - name: Prepare cached docker directory
         run: .github/actions/docker-cache/backup.sh ${{ runner.temp }}/docker_cache/cache.tar

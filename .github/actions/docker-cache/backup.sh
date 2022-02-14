@@ -6,8 +6,9 @@ set -euo pipefail
 
 main() {
   local cache_tar=$1
-  local cache_dir
-  cache_dir=$(dirname "$cache_tar")
+  local cache_dir; cache_dir=$(dirname "$cache_tar")
+
+  docker volume ls
 
   mkdir -p "$cache_dir"
   rm -f "$cache_tar"
