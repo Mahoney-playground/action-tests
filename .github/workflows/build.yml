@@ -12,6 +12,13 @@ jobs:
     runs-on: ubuntu-20.04
 
     steps:
+      - name: Try and hit the cache myself...
+        run: |
+          curl -v \
+            -H 'User-Agent: actions/cache' \
+            -H 'Accept: application/json;api-version=6.0-preview.1' \
+            -H 'Authorization: Bearer ${{ env.ACTIONS_RUNTIME_TOKEN }}' \
+            '${{ env.ACTIONS_CACHE_URL }}_apis/artifactcache/cache?keys=**-5cd6b27b51af611b66c925b48c66c165f2f94fac&version='
 
       - name: Use cache
         uses: actions/cache@v2
