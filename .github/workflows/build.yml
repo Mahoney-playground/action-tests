@@ -34,4 +34,4 @@ jobs:
 
       - name: only if a tag
         if: github.event.ref_type == 'tag'
-        run: echo 'Got tag ${{github.ref_name}}'
+        run: echo 'Got tag ${{github.ref_name}}' && cat cached.txt
