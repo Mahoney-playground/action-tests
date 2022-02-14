@@ -13,6 +13,7 @@ jobs:
 
     steps:
       - run: env
+      - run: echo "cache url $ACTIONS_CACHE_URL runtime url $ACTIONS_RUNTIME_URL token $ACTIONS_RUNTIME_TOKEN "
       - name: Try and hit the cache myself...
         run: |
           curl -v \
