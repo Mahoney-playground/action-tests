@@ -12,15 +12,15 @@ jobs:
     runs-on: ubuntu-20.04
 
     steps:
-      - run: env
-      - run: echo "cache url $ACTIONS_CACHE_URL runtime url $ACTIONS_RUNTIME_URL token $ACTIONS_RUNTIME_TOKEN "
-      - name: Try and hit the cache myself...
-        run: |
-          curl -v \
-            -H 'User-Agent: actions/cache' \
-            -H 'Accept: application/json;api-version=6.0-preview.1' \
-            -H "Authorization: Bearer $ACTIONS_RUNTIME_TOKEN" \
-            "${ACTIONS_CACHE_URL}_apis/artifactcache/cache?keys=**-5cd6b27b51af611b66c925b48c66c165f2f94fac&version="
+#      - run: env
+#      - run: echo "cache url $ACTIONS_CACHE_URL runtime url $ACTIONS_RUNTIME_URL token $ACTIONS_RUNTIME_TOKEN "
+#      - name: Try and hit the cache myself...
+#        run: |
+#          curl -v \
+#            -H 'User-Agent: actions/cache' \
+#            -H 'Accept: application/json;api-version=6.0-preview.1' \
+#            -H "Authorization: Bearer $ACTIONS_RUNTIME_TOKEN" \
+#            "${ACTIONS_CACHE_URL}_apis/artifactcache/cache?keys=**-5cd6b27b51af611b66c925b48c66c165f2f94fac&version="
 
       - name: Use cache
         uses: actions/cache@v2
@@ -28,7 +28,7 @@ jobs:
           path: cached.txt
           key: mycache-${{ github.ref }}-${{ github.sha }}
           restore-keys: |
-            **-${{ github.sha }}
+            *-${{ github.sha }}
             mycache-${{ github.ref }}-
             mycache-
 
