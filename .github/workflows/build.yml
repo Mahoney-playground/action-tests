@@ -13,7 +13,10 @@ jobs:
 
     steps:
 
-      - run: |
+      - name: Prepare maven repo credentials
+        if: github.ref_name == 'wiremock-studio-spike'
+        run: |
+          touch wiremock-studio-ui.jar
           mkdir ~/.m2
           echo '<servers>
             <server>
@@ -24,5 +27,12 @@ jobs:
           </servers>
           ' > ~/.m2/settings.xml
 
-      - run: cat ~/.m2/settings.xml
-      - run: mvn --version
+      - run: >-
+          mvn deploy:deploy-file
+          -Durl=https://maven.pkg.github.com/wiremock/wiremock-studio
+          -DrepositoryId=wiremock.studio
+          -Dfile=wiremock-studio-ui.jar
+          -DgroupId=org.wiremock
+          -DartifactId=wiremock-studio-ui
+          -Dversion=0.1.0-$(date +%s)
+
