@@ -14,6 +14,7 @@ jobs:
     steps:
 
       - run: |
+          mkdir ~/.m2
           echo '<servers>
             <server>
               <id>wiremock.studio</id>
