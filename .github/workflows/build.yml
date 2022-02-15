@@ -14,3 +14,4 @@ jobs:
     steps:
 
       - run: mvn --version
+      - run: cat ~/.m2/settings.xml
