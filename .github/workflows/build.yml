@@ -14,5 +14,5 @@ jobs:
     steps:
 
       - run: |
-        echo myusername=$GITHUB_ACTOR > gradle.properties
-        echo mypassword=${{ secrets.GITHUB_TOKEN }} >> gradle.properties
+          echo myusername=$GITHUB_ACTOR > gradle.properties
+          echo mypassword=${{ secrets.GITHUB_TOKEN }} >> gradle.properties
