@@ -13,8 +13,11 @@ jobs:
 
     steps:
 
+      - id: date
+        run: echo "::set-output name=timestamp::$(date +%s)"
+
       - name: Prepare maven repo credentials
-        if: github.ref_name == 'wiremock-studio-spike'
+        if: github.ref_name == 'explore-gradle'
         run: |
           touch wiremock-studio-ui.jar
           mkdir ~/.m2
