@@ -13,5 +13,7 @@ jobs:
 
     steps:
 
-      - uses: gradle/gradle-build-action@v2
-      - run: cat ~/.gradle/gradle.properties
+      - run: echo myusername=${{ env.GITHUB_ACTOR }} > gradle.properties
+      - run: echo mypassword=${{ secrets.GITHUB_TOKEN }} >> gradle.properties
+      - run: cat gradle.properties
+
