@@ -37,5 +37,4 @@ jobs:
           -Dfile=wiremock-studio-ui.jar
           -DgroupId=org.wiremock
           -DartifactId=wiremock-studio-ui
-          -Dversion=0.1.0-$(date +%s)
-
+          -Dversion=0.1.0-${{ timestamp }}
