@@ -18,14 +18,14 @@ jobs:
       - name: Prepare maven repo credentials
         run: |
           mkdir ~/.m2
-          echo '<servers>
+          echo "<servers>
             <server>
               <id>wiremock.studio</id>
-              <username>${{ env.GITHUB_ACTOR }}</username>
+              <username>$GITHUB_ACTOR</username>
               <password>whatevs</password>
             </server>
           </servers>
-          ' > ~/.m2/settings.xml
+          " > ~/.m2/settings.xml
 
 #      - name: Push wiremock-studio-ui.jar to maven repo
 #        run: >-
