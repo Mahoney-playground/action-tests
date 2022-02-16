@@ -21,8 +21,8 @@ jobs:
           echo '<servers>
             <server>
               <id>wiremock.studio</id>
-              <username>$GITHUB_ACTOR</username>
-              <password>${{ secrets.GITHUB_TOKEN }}</password>
+              <username>${{ env.GITHUB_ACTOR }}</username>
+              <password>whatevs</password>
             </server>
           </servers>
           ' > ~/.m2/settings.xml
