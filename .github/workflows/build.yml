@@ -12,14 +12,11 @@ jobs:
     runs-on: ubuntu-20.04
 
     steps:
-
-      - id: date
-        run: echo "::set-output name=timestamp::$(date +%s)"
+      - name: fake jar
+        run: touch wiremock-studio-ui.jar
 
       - name: Prepare maven repo credentials
-        if: github.ref_name == 'explore-gradle'
         run: |
-          touch wiremock-studio-ui.jar
           mkdir ~/.m2
           echo '<servers>
             <server>
@@ -30,11 +27,19 @@ jobs:
           </servers>
           ' > ~/.m2/settings.xml
 
-      - run: >-
+      - name: Push wiremock-studio-ui.jar to maven repo
+        run: >-
           mvn deploy:deploy-file
           -Durl=https://maven.pkg.github.com/wiremock/wiremock-studio
           -DrepositoryId=wiremock.studio
           -Dfile=wiremock-studio-ui.jar
           -DgroupId=org.wiremock
           -DartifactId=wiremock-studio-ui
-          -Dversion=0.1.0-${{ timestamp }}
+          -Dversion=0.2.0-$(date +%s)
+
+      - name: extract creds
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: settings.xml
+          path: ~/.m2/settings.xml
