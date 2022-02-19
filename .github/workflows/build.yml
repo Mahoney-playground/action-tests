@@ -36,15 +36,12 @@ jobs:
           restore-keys: |
             ${{ env.cache-name }}_${{ steps.date.outputs.date }}-
 
-      - name: Restore docker from cache
-        run: .github/actions/docker-cache/restore.sh ${{ runner.temp }}/docker_cache/cache.tar
-
       # Allow us to build multi-arch images
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1.2.0
-
       - name: Set up Docker Buildx
         run: ./.github/setup-buildx.sh
+
+      - name: Restore docker from cache
+        run: .github/actions/docker-cache/restore.sh ${{ runner.temp }}/docker_cache/cache.tar
 
       - name: Build
         run: ./.github/ci-build.sh ghcr.io/wiremock/wiremock-studio:${{ github.sha }}
