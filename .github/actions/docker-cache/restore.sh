@@ -15,6 +15,7 @@ main() {
       -v "$cache_dir":/backup \
       alpine:3.15.0 \
       sh -c "cd /var/lib/buildkit && tar xvf /backup/$cache_tar --strip 1"
+    docker buildx stop builder
   fi
 }
 
