@@ -12,7 +12,7 @@ env:
   DOCKER_BUILDKIT: 1
   BUILDKIT_PROGRESS: plain
   PROGRESS_NO_TRUNC: 1
-  cache-name: docker-cache-4
+  cache-name: docker-cache-5
 
 jobs:
   build:
