@@ -5,14 +5,15 @@ set -euo pipefail
 . "${BASH_SOURCE%/*}/timing.sh"
 
 main() {
-  local cache_tar=$1
+  local full_path_to_cache_tar=$1
+  local cache_tar; cache_tar=$(basename "$full_path_to_cache_tar")
 
-  if [[ -f "$cache_tar" ]]; then
+  if [[ -f "$full_path_to_cache_tar" ]]; then
     docker run --rm \
       --volumes-from buildx_buildkit_builder0 \
       -v "$(pwd)":/backup \
       ubuntu \
-      bash -c "cd /var/lib/buildkit && tar xvf /backup/backup.tar --strip 1"
+      bash -c "cd /var/lib/buildkit && tar xvf /backup/$cache_tar.tar --strip 1"
   fi
 }
 
