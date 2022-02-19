@@ -12,8 +12,8 @@ main() {
     docker run --rm \
       --volumes-from buildx_buildkit_builder0 \
       -v "$(pwd)":/backup \
-      ubuntu \
-      bash -c "cd /var/lib/buildkit && tar xvf /backup/$cache_tar.tar --strip 1"
+      alpine \
+      sh -c "cd /var/lib/buildkit && tar xvf /backup/$cache_tar --strip 1"
   fi
 }
 

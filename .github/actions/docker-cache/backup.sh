@@ -16,7 +16,7 @@ main() {
     --rm \
     --volumes-from buildx_buildkit_builder0 \
     -v "$cache_dir":/backup \
-    ubuntu tar cvf "/backup/$cache_tar" /var/lib/buildkit
+    alpine tar cvf "/backup/$cache_tar" /var/lib/buildkit
   sudo chown "$USER:$(id -g -n "$USER")" "$full_path_to_cache_tar"
   ls -lh "$full_path_to_cache_tar"
 }
